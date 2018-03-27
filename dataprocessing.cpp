@@ -1,7 +1,10 @@
 #include <iostream>
 #include <string>
+extern "C"{
 #include "dataprocessing.h"
-#include "readgml.h"
+#include "readgml.h"   
+}
+
 
 using namespace std;
 
@@ -20,6 +23,7 @@ int DataProcessing::getInput()
 
 void DataProcessing::analisarGrafo(string nomeArquivo)
 {
+    int errorFlag;
     //Faz o cast da string para um ponteiro de char.
     //Necessario para o 'fopen', pois ele nao aceita o tipo 'string'.
     const char *cstr = nomeArquivo.c_str();
@@ -31,6 +35,11 @@ void DataProcessing::analisarGrafo(string nomeArquivo)
         getchar();
         return;
     }
+    cout << endl << "Before karate" << endl;
+    NETWORK *karate;
+cout << endl << "Calling shit!(Read Network)" << endl;
+    errorFlag = read_network(karate, fp);
+cout << endl << "Good Job!" << endl;
 
     
 }
