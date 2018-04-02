@@ -1,7 +1,9 @@
 #include <iostream>
 #include "userinterface.h"
 #include "dataprocessing.h"
-#include "readgml.h"
+extern "C"{
+#include "readgml.h"   
+}
 
 using namespace std;
 
@@ -13,9 +15,13 @@ int main()
   MenuOptions *menuOptions;
 
   userInterface = new UserInterface();
+
   dataProcessing = new DataProcessing();
+
   menuOptions = new MenuOptions();
+
   int stopFlag = 0;
+  
   while(!stopFlag){
     stopFlag = userInterface->menuPrincipal(menuOptions, dataProcessing);
   }

@@ -9,7 +9,7 @@ using namespace std;
 
 UserInterface::UserInterface()
 {
-
+ARQUIVOLIDO = false;
 }
 
 int UserInterface::menuPrincipal(MenuOptions* menuOptions, DataProcessing* dataProcessing){
@@ -23,7 +23,8 @@ int UserInterface::menuPrincipal(MenuOptions* menuOptions, DataProcessing* dataP
         cout << "Escolha uma das opcoes abaixo: " << endl;
         cout << "1 - Analisar o grafo" << endl;
         cout << "2 - Mostrar os nos em decrescente" << endl;
-        cout << "3 - Sair do programa " << endl;
+        cout << "3 - Mostrar cliques " << endl;
+        cout << "4 - Sair do programa " << endl;
 
         menuOptions->setOpcao(dataProcessing->getInput());
         
@@ -37,8 +38,23 @@ int UserInterface::menuPrincipal(MenuOptions* menuOptions, DataProcessing* dataP
             switch(num){
                 case 1: encontraGrafo(dataProcessing);
                         break;
-                case 2:break;
-                case 3: stopFlag = 1;
+                case 2: if(!ARQUIVOLIDO){
+                            cout << endl << "Voce precisa analisar um aquivo para carregar um grafo na memoria" << endl;
+                            getchar();
+                            break;
+                        }
+                        mostraNos(dataProcessing->organizaNos(),dataProcessing); 
+                        break;
+                case 3: if(!ARQUIVOLIDO){
+                            cout << endl << "Voce precisa analisar um aquivo para carregar um grafo na memoria" << endl;
+                            getchar();
+                            break;
+                        }
+                        mostraCliques(dataProcessing->bronProcess(), dataProcessing);
+                        
+                        
+                        break;
+                case 4: stopFlag = 1;
                         break;
                 default: break;
             }   
@@ -61,7 +77,13 @@ void UserInterface::encontraGrafo(DataProcessing* dataProcessing)
         cin >> confirma;
         getchar();
         if((confirma == 'S')||(confirma == 's')){
-            dataProcessing->analisarGrafo(nomeGrafo);
+            int i;
+            bool flag = true;
+            i = dataProcessing->analisarGrafo(nomeGrafo);
+            
+            if(i==0){
+                setArquivoLido(flag);
+            }
             break;
         }else if((confirma == 'N')||(confirma == 'n')){
             cout << endl << "Entre com o nome do arquivo .gml desejado: (ex.:nome.gml)" << endl;
@@ -69,4 +91,26 @@ void UserInterface::encontraGrafo(DataProcessing* dataProcessing)
             getchar();
         }
     }   
+}
+
+void UserInterface::mostraNos(VERTEX *listaDeNos, DataProcessing* dataProcessing)
+{
+    int i=0;
+while(listaDeNos[i].id>0){
+    cout << endl<< "ID do Vertice: " << listaDeNos[i].id << " Grau do Vertice: " << listaDeNos[i].degree << endl;
+    i++;
+}
+getchar();
+}
+
+void UserInterface::mostraCliques(vector < vector <VERTEX> > myClique, DataProcessing* dataProcessing){
+    for(vector <VERTEX> cliq: myClique){
+        cout << endl << "------CLIQUE------" << endl;
+        for(VERTEX vertex: cliq){
+            cout << vertex.id << " ";
+        }
+        cout << endl << "--FIM DO CLIQUE---";
+    }
+    getchar();
+    getchar();
 }

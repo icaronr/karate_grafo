@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "ostream": "cpp",
-        "string_view": "c"
+        "string_view": "c",
+        "*.tcc": "cpp",
+        "system_error": "cpp",
+        "iostream": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp"
     }
 }

@@ -195,7 +195,7 @@ void create_network(NETWORK *network)
   // Count the vertices
 
   network->nvertices = count_vertices();
-  printf("\n Create Network -> nvertices -> %d \n", network->nvertices);
+  //printf("\n Create Network -> nvertices -> %d \n", network->nvertices);
   
   // Make space for the vertices
 
@@ -384,11 +384,9 @@ void read_edges(NETWORK *network)
     } while (next_line(line)==0);
 
     // Add these edges to the appropriate vertices
-    printf("\n INICIO DA TRETA 1 s = %d -- t = %d \n", s, t);
     if ((s>=0)&&(t>=0)) {
       vs = find_vertex(s,network);
       vt = find_vertex(t,network);
-      printf("\n DEPOIS DO VS E VT vs = %d -- vt = %d \n", vs, vt);
       
       network->vertex[vs].edge[count[vs]].target = vt;  
       network->vertex[vs].edge[count[vs]].weight = w;
@@ -403,7 +401,7 @@ void read_edges(NETWORK *network)
     }
 
   }
-  getchar();
+  
   free(count);
   return;
 }
@@ -413,17 +411,17 @@ void read_edges(NETWORK *network)
 
 int read_network(NETWORK *network, FILE *stream)
 {
-  printf("\n Read Network -> Fill Buffer \n");
+  //printf("\n Read Network -> Fill Buffer \n");
   fill_buffer(stream);
-  printf("\n Read Network -> Create Network \n");
+  //printf("\n Read Network -> Create Network \n");
   create_network(network);
-  printf("\n Read Network -> Get Degrees \n");
+  //printf("\n Read Network -> Get Degrees \n");
   get_degrees(network);
-  printf("\n Read Network -> Read Edges \n");
+  //printf("\n Read Network -> Read Edges \n");
   read_edges(network);
-  printf("\n Read Network -> Free Buffer \n");
+  //printf("\n Read Network -> Free Buffer \n");
   free_buffer();
-
+  
   return 0;
 }
 
