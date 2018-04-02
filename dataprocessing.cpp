@@ -1,3 +1,10 @@
+/**
+ * Autor: Icaro Nery Rezende - 150037023
+ * Universidade de Brasilia
+ * Teoria e Aplicacao de Grafos - Turma A - 2018/1
+ * Trabalho 1
+ * Arquivo que contem a implementacao das classes e metodos de processamento dos dados do projeto
+ */
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -8,7 +15,7 @@ extern "C"{
 
 
 using namespace std;
-
+//Contrutor da classe
 DataProcessing::DataProcessing()
 {
 entrada = 0;
@@ -21,7 +28,7 @@ myCliques = {};
 
 
 }
-
+//Recebe uma entrada para o menu
 int DataProcessing::getInput()
 {
     
@@ -29,7 +36,7 @@ int DataProcessing::getInput()
     getchar();
     return entrada;
 }
-
+//Abre o arquivo e monsta o grafo com base nos dados do arquivo
 int DataProcessing::analisarGrafo(string nomeArquivo)
 {
     int errorFlag;
@@ -45,33 +52,35 @@ int DataProcessing::analisarGrafo(string nomeArquivo)
         return 1;
     }
     NETWORK *karate;
+    
     errorFlag = read_network(karate, fp);
-    free_network(&network);
-cout << endl << "Arquivo analisado com sucesso!" << endl;
+    //free_network(&network);
+    cout << endl << "Arquivo analisado com sucesso!" << endl;
 
-getchar();
+    getchar();
     setNetwork(*karate);
     return 0;
 }
-
+//Cria uma copia dos nos para ordenar
 VERTEX* DataProcessing::organizaNos(){
     int i, vertexCount;
     VERTEX* listaDeNos;
     vertexCount = network.nvertices;
     listaDeNos = (VERTEX*)calloc(vertexCount,sizeof(VERTEX));
-
+    //laco para copiar os dados do grafo para o vetor('listaDeNos')
     for(i=0; i< network.nvertices; i++){
         listaDeNos[i] = network.vertex[i];
     } 
+    //Chamada do metodo para ordenacao dos nos
     organizaGrau(listaDeNos);
     return listaDeNos;
 }
-
+//Ordena a copia em ordem crescente de grau
 VERTEX* DataProcessing::organizaGrau(VERTEX *listaDeNos){
     int i,imax, flag;
     VERTEX tempVertex;
     imax = network.nvertices;
-    
+    //ordenacao em ordem crescente de grau
     do{
         flag = 0;
         for(i=0;i<imax-1;i++){
@@ -89,26 +98,30 @@ VERTEX* DataProcessing::organizaGrau(VERTEX *listaDeNos){
 
     return listaDeNos;
 }
-
+//Inicializa o processo para iniciar o Bron Kerbosch e trata a saida do algoritmo
 vector <vector <VERTEX> > DataProcessing::bronProcess(){
     vector <VERTEX> R, P, X;
     vector < vector <VERTEX> > clique;
-    int i, imax;
+    int i, imax, grau;
     imax = network.nvertices;
+    //Faz a copia de todos os vertices para o vetor 'P'
     for(i=0; i<imax-1;i++){
         P.push_back(network.vertex[i]);
     }
     
     
     bronKerbosch(R, P, X);
+    //Valor minimo do grau dos cliques a serem mostrados
+    grau = 5;
     for(vector <VERTEX> cliq : myCliques){
-            if(cliq.size()>4){
+            if(cliq.size()>=grau){
                 clique.push_back(cliq);
             }
     }
+    //retorna um vetor que contem os cliques de grau maior ou igual ao especificado
     return clique;
 }
-
+//Implementacao do algoritmo de Bron Kerbosch sem pivotamento
 void DataProcessing::bronKerbosch(vector <VERTEX> R, vector <VERTEX> P, vector <VERTEX> X)
 {
     int i,imax;
@@ -117,7 +130,6 @@ void DataProcessing::bronKerbosch(vector <VERTEX> R, vector <VERTEX> P, vector <
     vector <VERTEX> P1;
     vector <VERTEX> X1;
     vector < vector <VERTEX> > clique;
-   // cout << endl << "TAMANHO  -+- " << P.size() << endl;
     
     if(P.empty() && X.empty()){
         
@@ -127,54 +139,25 @@ void DataProcessing::bronKerbosch(vector <VERTEX> R, vector <VERTEX> P, vector <
     }else{
        
         imax = P.size();
-        //cout << endl << P.size() << " tamanho nessa iteracao" << endl;
-        //for(i=0; i<imax; i++){
+    
         for(VERTEX v: P){
-            //cout << endl << "i=  " << i << "   P[i].id =  " << P[i].id << endl;
-            //cout << endl << "TAMANHO  -- " << P.size() << endl;
-            
-            //R1 = uniteVector(R,P[i]);
+   
             R1 = uniteVector(R, v);
-            //for(int pao =0; pao < R1.size(); pao++){
-            //    cout << endl << "R1(" << pao << ") - " << R1[pao].id << endl;
-            //}
-            // getchar();
-            //P1 = intersectVector(P,neighbours(P[i]));
+     
             P1 = intersectVector(P, neighbours(v));
-            //for(int pao =0; pao < P1.size(); pao++){
-            //    cout << endl << "P1(" << pao << ") - " << P1[pao].id << endl;
-            //}
-            // getchar();
-            //X1 = intersectVector(X, neighbours(P[i]));
+    
             X1 = intersectVector(X, neighbours(v));
-            //for(int pao =0; pao < R1.size(); pao++){
-            //    cout << endl << "X1(" << pao << ") - " << X1[pao]->id << endl;
-            //}
-            // getchar();
-            //cout << endl << "-----------------PROXIMA CHAMADA----------------------------" << endl;
+ 
             bronKerbosch(R1, P1, X1);
-            //cout << endl << "ASJDHFLJAH" << endl;
-            //cout << endl << "P[i](" << i << ") - " << P[i].id << endl;
-           //for(int pao =0; pao < P.size(); pao++){
-            //    cout << endl << "P(" << pao << ")(pao) - " << P[pao].id << endl;
-            //}
-            //cout << endl << "a ser removido = " << v.id << endl;
-           // P = removeItem(P,P[i]);
+           
             P = removeItem(P, v);
-            //cout << endl << "REMOVED" << endl;
-           // for(int pao =0; pao < P.size(); pao++){
-            //    cout << endl << "P(" << pao << ") - " << P[pao].id << endl;
-          //  }
             
-            //X.push_back(P[i]);
             X.push_back(v);
             
         }
        
         
     }
-     //cout << endl << "IOOOP" << endl;
-     //getchar();
     
 }
 
@@ -182,7 +165,6 @@ void DataProcessing::bronKerbosch(vector <VERTEX> R, vector <VERTEX> P, vector <
 vector <VERTEX> DataProcessing::neighbours(VERTEX v1)
 {
     vector <VERTEX> vizinhos;
-    //cout << endl << "NO TESTE  -- " << v1->id << endl;
     int i=0, j=0, grau = 0;
     int nodeId;
 
@@ -190,31 +172,17 @@ vector <VERTEX> DataProcessing::neighbours(VERTEX v1)
         for(j=0; j< network.vertex[i].degree; j++){
             if(i+1 == v1.id){//i vai de 0 a 33 e ID de 1 a 34, logo id==i+1
                 nodeId = network.vertex[i].edge[j].target;
-                vizinhos.push_back(network.vertex[nodeId]);//nodeID vai de 1 a 34, o index do vertex começa em 0
-                //cout << endl << network.vertex[nodeId].id << " - " << v1.id << endl;
+                vizinhos.push_back(network.vertex[nodeId]);
                 grau++;
-            }/*else{
-                if(network.vertex[i].edge[j].target == v1->id){
-                    vizinhos.push_back(&network.vertex[i]);
-                    grau++;
-                }
-            }*/
+            }
         }
     }
-   /* cout << endl << grau << "    -   " << v1->degree << endl;
-    getchar();
-    if(grau == v1->degree){
-        cout << endl << "GRAU OK! -  " << grau << endl;
-        getchar();
-        getchar();
-    }*/
 
     return vizinhos;
 }
 
 vector <VERTEX> DataProcessing::removeItem(vector <VERTEX> v1,VERTEX v2)
 {
-    //cout << endl << "remove(start)" << endl;
     int i, achou;
     achou =0;
     for(i=0; i<v1.size(); i++){
@@ -223,15 +191,12 @@ vector <VERTEX> DataProcessing::removeItem(vector <VERTEX> v1,VERTEX v2)
             break;
         }
     }
-    //cout << endl << "middle" << endl;
     if(achou){
         v1.erase(v1.begin()+i);
         for(i; i<v1.size(); i++){
             v1[i] = v1[i+1];
         }
-      //  cout << endl << "opa" << endl;
        v1.pop_back();
-       //cout << endl << "pas" << endl;
     }
     return v1;
 }

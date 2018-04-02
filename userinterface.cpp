@@ -1,3 +1,10 @@
+/**
+ * Autor: Icaro Nery Rezende - 150037023
+ * Universidade de Brasilia
+ * Teoria e Aplicacao de Grafos - Turma A - 2018/1
+ * Trabalho 1
+ * Arquivo que contem a implementacao das classes e metodos responsaveis pela entrada e saida de dados.
+ */
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -23,7 +30,7 @@ int UserInterface::menuPrincipal(MenuOptions* menuOptions, DataProcessing* dataP
         cout << "Escolha uma das opcoes abaixo: " << endl;
         cout << "1 - Analisar o grafo" << endl;
         cout << "2 - Mostrar os nos em decrescente" << endl;
-        cout << "3 - Mostrar cliques " << endl;
+        cout << "3 - Mostrar cliques maximos/maximais com pelo menos 5 elementos" << endl;
         cout << "4 - Sair do programa " << endl;
 
         menuOptions->setOpcao(dataProcessing->getInput());
@@ -97,7 +104,7 @@ void UserInterface::mostraNos(VERTEX *listaDeNos, DataProcessing* dataProcessing
 {
     int i=0;
 while(listaDeNos[i].id>0){
-    cout << endl<< "ID do Vertice: " << listaDeNos[i].id << " Grau do Vertice: " << listaDeNos[i].degree << endl;
+    cout << endl<< "ID do Vertice: " << listaDeNos[i].id << "  \n->Grau do Vertice "<< listaDeNos[i].id << ": " << listaDeNos[i].degree << endl;
     i++;
 }
 getchar();
