@@ -21,7 +21,7 @@ class DataProcessing
 private:
     int entrada;
     NETWORK network;
-
+    bool CLIQUESFEITOS;
    vector < vector <VERTEX> > myCliques;
 public:
     //Construtor da classe

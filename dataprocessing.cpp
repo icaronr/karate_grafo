@@ -23,7 +23,7 @@ network = { 0,      //nvertices
             0,      // directed
             NULL    //*vertex
 };
-
+CLIQUESFEITOS = false;
 myCliques = {};
 
 
@@ -54,7 +54,7 @@ int DataProcessing::analisarGrafo(string nomeArquivo)
     NETWORK *karate;
     
     errorFlag = read_network(karate, fp);
-    //free_network(&network);
+    
     cout << endl << "Arquivo analisado com sucesso!" << endl;
 
     getchar();
@@ -112,16 +112,21 @@ vector <vector <VERTEX> > DataProcessing::bronProcess(){
     
     bronKerbosch(R, P, X);
     //Valor minimo do grau dos cliques a serem mostrados
-    grau = 5;
-    for(vector <VERTEX> cliq : myCliques){
+    if(!CLIQUESFEITOS){
+        grau = 5;
+        for(vector <VERTEX> cliq : myCliques){
             if(cliq.size()>=grau){
                 clique.push_back(cliq);
             }
+        } 
+        CLIQUESFEITOS = true;
     }
+    
     //retorna um vetor que contem os cliques de grau maior ou igual ao especificado
     return clique;
 }
 //Implementacao do algoritmo de Bron Kerbosch sem pivotamento
+//Similar ao encontrado nos slides de aula
 void DataProcessing::bronKerbosch(vector <VERTEX> R, vector <VERTEX> P, vector <VERTEX> X)
 {
     int i,imax;
@@ -161,56 +166,63 @@ void DataProcessing::bronKerbosch(vector <VERTEX> R, vector <VERTEX> P, vector <
     
 }
 
-
+//Encontra os vizinhos de um vertice
 vector <VERTEX> DataProcessing::neighbours(VERTEX v1)
 {
     vector <VERTEX> vizinhos;
-    int i=0, j=0, grau = 0;
+    int i=0, j=0;
     int nodeId;
-
+    //Percorrendo todos os vertices do grafo
     for(i=0; i<network.nvertices; i++){
+        //percorrendo todas as arestas do vertice atual
         for(j=0; j< network.vertex[i].degree; j++){
+            //encontra os vertices vizinhos e adiciona a um novo vetor
             if(i+1 == v1.id){//i vai de 0 a 33 e ID de 1 a 34, logo id==i+1
                 nodeId = network.vertex[i].edge[j].target;
                 vizinhos.push_back(network.vertex[nodeId]);
-                grau++;
             }
         }
     }
-
+    //retorna um vetor de vizinhos
     return vizinhos;
 }
-
+//Remove um elemento de um vetor de vertice
 vector <VERTEX> DataProcessing::removeItem(vector <VERTEX> v1,VERTEX v2)
 {
     int i, achou;
     achou =0;
+    //procura o elemento especificado no vetor
     for(i=0; i<v1.size(); i++){
         if(v1[i].id == v2.id){
             achou = 1;
             break;
         }
     }
+    //se achar, remove do vetor e move os itens seguintes, preenchendo a lacuna
     if(achou){
         v1.erase(v1.begin()+i);
         for(i; i<v1.size(); i++){
             v1[i] = v1[i+1];
         }
+       //retira o ultimo elemento, para adequar ao novo tamanho do vetor 
        v1.pop_back();
     }
+    //Retorna o vetor sem o elemento especificado
     return v1;
 }
-
+//Faz a uniao entre um vetor de vertices a um vertice
 vector <VERTEX> DataProcessing::uniteVector(vector <VERTEX> v1,VERTEX v2)
 {
 
     int i, elementoIgual;
     elementoIgual = 0;
+    //Procura se o vertice ja esta presente no vetor
     for(i=0; i!=v1.size(); i++){
         if(v1[i].id == v2.id){
             elementoIgual = 1;
         }               
     }  
+    //Caso nao esteja presente, adiciona ele ao vetor
     if(!elementoIgual){
         v1.push_back(v2);
     }
@@ -218,11 +230,12 @@ vector <VERTEX> DataProcessing::uniteVector(vector <VERTEX> v1,VERTEX v2)
     return v1;
 }
 
-
+//Faz a intersecao entre 2 vetores de vertices
 vector <VERTEX> DataProcessing::intersectVector(vector <VERTEX> v1, vector <VERTEX> v2)
 {
     vector <VERTEX> intersectDone;
     int i, j;
+    //Se encontrar o item nos 2 vetores, adiciona ao vetor de saida
     for(i=0; i!=v1.size(); i++){
         for(j=0; j!=v2.size(); j++){
             if(v1[i].id == v2[j].id){
@@ -234,12 +247,13 @@ vector <VERTEX> DataProcessing::intersectVector(vector <VERTEX> v1, vector <VERT
 
     return intersectDone;
 }
-
+//construtor de classe
 MenuOptions::MenuOptions()
 {
     opcao = 0;
     VALIDO = false;
 }
+//valida a opcao do menu
 void MenuOptions::validaOpcao(int opcao)
 {
     if(opcao>0 & opcao <5){
