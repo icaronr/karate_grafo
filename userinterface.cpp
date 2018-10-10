@@ -119,5 +119,5 @@ void UserInterface::mostraCliques(vector < vector <VERTEX> > myClique, DataProce
         cout << endl << "--FIM DO CLIQUE---";
     }
     getchar();
-    getchar();
+    
 }

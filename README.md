@@ -11,6 +11,13 @@
  * A partir desse grafo, temos a opcao de mostrar os nos ordenados por grau.
  * Tambem temos a opcao de mostrar os cliques maximais e maximos.
  * 
- * Para compilar o arquivo, utilize o comando 'make' na pasta do projeto
- * Para executar o programa utilize o comando './karate_grafo' na pasta do projeto
+ * Para compilar o arquivo, utilize o comando 'make' no terminal aberto na pasta do projeto
+ * Para executar o programa utilize o comando './karate_grafo' no terminal aberto na pasta do projeto
+ * Compilador utilizado : GCC e G++
+ * gcc (Ubuntu 7.2.0-8ubuntu3.2) 7.2.0
+ * g++ (Ubuntu 7.2.0-8ubuntu3.2) 7.2.0
+ * S.O. Ubuntu 17.10
+ * Linux Kernel 4.13.0-37-generic
+ * Copyright (C) 2017 Free Software Foundation, Inc.
  */
+
